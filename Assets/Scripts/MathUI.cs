@@ -18,6 +18,9 @@ public class MathUI : MonoBehaviour
     [Tooltip("Next question button that also indicates if player's answer is right or wrong.")]
     public GameObject nextQnButtonGO = null;
 
+    [Tooltip("Text to hold full question.")]
+    public Text nextQnTextGO = null;
+
     [Tooltip("Timer slider.")]
     public GameObject timerGO = null;
 
@@ -35,16 +38,11 @@ public class MathUI : MonoBehaviour
         SetupQuestion();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-
     private void SetupQuestion()
     {
-        timerGO.GetComponent<SliderTimer>().StartTimer();
+        UpdateScoreText();  //Initialize with 0/10 to start with.
+
+        timerGO.GetComponent<SliderTimer>().StartTimer(PopulateWithCorrectAnswer);
 
         if (nextQnButtonGO.activeInHierarchy)
         {
@@ -123,7 +121,17 @@ public class MathUI : MonoBehaviour
     public void NextQnButtonPressed()
     {
         Debug.Log("Next Button Pressed in math ui");
-        SetupQuestion();
+
+        //New weird idea... Keep going until you reach the goal you/the teacher set for yourself today.
+        if (scoreGO.GetComponent<ScoreKeeper>().GetScore() >= gen.GetTotalNumQuestions())
+        {
+            Debug.Log("Show CONGRATULATIONS screen");
+        }
+        else
+        {
+            SetupQuestion();
+        }
+        
     }
    
     public void PopulateAnswerButtons()
@@ -138,6 +146,14 @@ public class MathUI : MonoBehaviour
         mcqAnswers[2].text = option2Ans.ToString();
 
         EnableAllAnswerButtons(true);  //ct: Enable buttons after new values are populated.
+    }
+
+    private void PopulateWithCorrectAnswer()
+    {
+        int correctAns = gen.GetCurrCorrectAnswer();
+        questionText.text = gen.GetQuestionString() + correctAns;
+        nextQnButtonGO.GetComponent<NextQuestionButton>().SetSadFace();
+        nextQnButtonGO.SetActive(true);
     }
     
 }

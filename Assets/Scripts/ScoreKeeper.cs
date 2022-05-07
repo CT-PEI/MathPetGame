@@ -6,18 +6,7 @@ public class ScoreKeeper : MonoBehaviour
 {
     private int score;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //In Unity, start/update functions in MonoBehaviour should be removed if empty. This will improve performance because they will not be called.
     public void IncrementScore()
     {
         score++;

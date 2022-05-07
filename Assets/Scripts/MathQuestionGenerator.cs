@@ -10,8 +10,6 @@ public class MathQuestionGenerator
     //ct: TODO: Maybe expose this to 1. component value, 2. text file setting, 3. mutiplayer, and teacher can control live while student is using app.
     private int totalNumQns = 10;  //ct: Total number of questions for this set of exercise. Can be set outside of code by teacher later.
 
-    
-
     //ct: This is for question equation values.
     private int lhs = 0;
     private int rhs = 0;
@@ -20,20 +18,16 @@ public class MathQuestionGenerator
     //ct: Purpose of separating the values is to give more control to the teacher.
     private int lhsMaxValue = 20;  
     private int rhsMaxValue = 20;
-    private string mathOperator = "+";  //ct: Expose this later to teacher's setting files.
-
+    private Operators mathOperator = Operators.ADD;  //ct: Expose this later to teacher's setting files.
 
     private string questionString;  //ct: This is what prints out on screen as the question.
     private int answer;
 
+    private enum Operators { ADD, SUB, DIV, MUL };
 
     public class MathQuestion
     {
-        //enum operators { ADD, SUB, DIV, MUL };
-        //ct: Just do ADD for now.
-
         public int maxVal;  //ct: Max value of arguments.
-        //public string questionStr;
         public int answer;        
     }
     
@@ -47,8 +41,6 @@ public class MathQuestionGenerator
             if (result == answer)
             {
                 return true;
-
-                //GUI.Box.
             }
             
         }
@@ -77,6 +69,11 @@ public class MathQuestionGenerator
         return totalNumQns.ToString();
     }
 
+    public int GetTotalNumQuestions()
+    {
+        return totalNumQns;
+    }
+
 
     public int GetCurrCorrectAnswer()
     {
@@ -88,76 +85,43 @@ public class MathQuestionGenerator
     {
         currQnNum++;
 
+        //Range that includes the value itself.
         lhs = Random.Range(0, lhsMaxValue+1);
         rhs = Random.Range(0, rhsMaxValue+1);
 
         MathQuestion question = new MathQuestion();
 
-        if (mathOperator == "+")
+        //String comparison is expensive in general, but since the string is always just 1 character, it does not really matter.
+        //Better practice to use ENUM here, but it will not make much of a difference here.
+
+        string lhsStr = lhs.ToString();
+        string rhsStr = rhs.ToString();
+        string questionOperator = "";
+
+        switch (mathOperator)
         {
-            string lhsStr = lhs.ToString();
-            string rhsStr = rhs.ToString();
-
-            questionString = lhsStr + " + " + rhsStr + " = ";
-            answer = lhs + rhs;
+            case Operators.ADD:
+                questionOperator = "+";
+                answer = lhs + rhs;
+                break;
+            case Operators.SUB:
+                questionOperator = "-";
+                answer = lhs - rhs;
+                break;
+            case Operators.DIV:
+                questionOperator = "/";
+                answer = lhs / rhs;
+                break;
+            case Operators.MUL:
+                questionOperator = "*";
+                answer = lhs * rhs;
+                break;
         }
-        // else if(mathOperator == "-")
-        // {
-        //     question.questionStr = lhs + "-" + rhs + "=";
-        //     question.answer = lhs - rhs;
-        // }
-        // else if(mathOperator == "*")
-        // {
-        //     question.questionStr = lhs + "*" + rhs + "=";
-        //     question.answer = lhs * rhs;
-        // }
-        // else if(mathOperator == "/")
-        // {
-        //     question.questionStr = lhs + "/" + rhs + "=";
-        //     question.answer = lhs / rhs;
-        // }    
 
-
+        questionString = lhsStr + " " + questionOperator + " " +  rhsStr + " = ";
+        
         return question.answer;
     }
-
-
-    //int main()
-    //{
-    //    //cout << "\nWelcome to the math exercise buddy!\n";
-    //    MathQuestion question;
-
-    //    string questionString;
-    //    int answer;
-
-    //    int correctAns;
-
-    //    //ct: Print out 10 questions
-    //    for (int i = 1; i < 3; i++)
-    //    {
-    //        cout << "\nQuestion " << i << ":\n";
-
-    //        correctAns = question.createMathQuestion("+", 10);
-    //        cout << question.questionStr;
-    //        cin >> answer;
-
-
-    //        cout << "\nCorrect Answer: " << correctAns;
-    //        if (answer == correctAns)
-    //        {
-    //            cout << "\nGenius!\n";
-    //        }
-    //        else
-    //        {
-    //            cout << "\nYOU CAN DO IT! TRY AGAIN!\n";
-    //        }
-
-    //    }
-
-    //}
-
-
-
 
 };
 
