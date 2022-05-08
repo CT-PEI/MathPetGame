@@ -116,6 +116,9 @@ public class MathQuestionGenerator
                 questionOperator = "*";
                 answer = lhs * rhs;
                 break;
+            default:
+                Debug.Log("Operator not found");
+                break;
         }
 
         questionString = lhsStr + " " + questionOperator + " " +  rhsStr + " = ";

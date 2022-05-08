@@ -30,11 +30,15 @@ public class MathUI : MonoBehaviour
     [Tooltip("Game object that keeps track of score.")]
     public GameObject scoreGO = null;
 
+    [Tooltip("Congratulations screen when score target is met.")]
+    public GameObject congratulationsScreenGO = null;
+
     MathQuestionGenerator gen = new MathQuestionGenerator();
 
     // Start is called before the first frame update
     void Start()
     {
+        ShowCongratulationsScreen(false);
         SetupQuestion();
     }
 
@@ -126,6 +130,7 @@ public class MathUI : MonoBehaviour
         if (scoreGO.GetComponent<ScoreKeeper>().GetScore() >= gen.GetTotalNumQuestions())
         {
             Debug.Log("Show CONGRATULATIONS screen");
+            ShowCongratulationsScreen(true);
         }
         else
         {
@@ -133,17 +138,48 @@ public class MathUI : MonoBehaviour
         }
         
     }
+
+    public void ShowCongratulationsScreen(bool show)
+    {
+        if (congratulationsScreenGO != null)
+            congratulationsScreenGO.SetActive(show);
+    }
    
     public void PopulateAnswerButtons()
     {
         int correctAns = gen.GetCurrCorrectAnswer();
 
-        int option1Ans = correctAns - 1;
-        int option2Ans = correctAns + 1;
+        int randomNumber1 = Random.Range(1, 6);
+        int randomNumber2 = Random.Range(6, 11);
 
-        mcqAnswers[0].text = option1Ans.ToString();
-        mcqAnswers[1].text = correctAns.ToString();
-        mcqAnswers[2].text = option2Ans.ToString();
+        int wrongAns1 = correctAns + randomNumber1;
+        int wrongAns2 = correctAns + randomNumber2;
+
+        int positionOfCorrectAnswer = Random.Range(1, 4);  //So that position of correct answer is not predictable.
+
+        int[] options;
+
+        switch(positionOfCorrectAnswer)
+        {
+            case 1:
+                options = new int[] { correctAns, wrongAns1, wrongAns2 };
+                break;
+            case 2:
+                options = new int[] { wrongAns1, correctAns, wrongAns2 };
+                break;
+            case 3:
+                options = new int[] { wrongAns1, wrongAns2, correctAns };
+                break;
+            default:
+                Debug.Log("Position of correct answer is out of range!");  //todo: Error instead of just log.
+                options = new int[] { wrongAns1, wrongAns2, correctAns };
+                break;
+        }
+
+        for (int i = 0; i < options.Length; i++)
+        {
+            mcqAnswers[i].text = options[i].ToString();
+        }
 
         EnableAllAnswerButtons(true);  //ct: Enable buttons after new values are populated.
     }
