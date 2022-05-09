@@ -30,6 +30,12 @@ public class MathUI : MonoBehaviour
     [Tooltip("Game object that keeps track of score.")]
     public GameObject scoreGO = null;
 
+    [Tooltip("Starting screen.")]
+    public GameObject startScreenGO = null;
+
+    [Tooltip("Game screen that contains game buttons and text.")]
+    public GameObject gameScreenGO = null;
+
     [Tooltip("Congratulations screen when score target is met.")]
     public GameObject congratulationsScreenGO = null;
 
@@ -38,8 +44,45 @@ public class MathUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        ShowStartScreen(true);
+        ShowGameScreen(false);
         ShowCongratulationsScreen(false);
+    }
+
+    public void StartGame()
+    {
+        //When user clicked on number of question button and operator button, the buttons already took care of setting the values in MathQuestionGenerator.
         SetupQuestion();
+        ShowStartScreen(false);
+        ShowGameScreen(true);
+        ShowCongratulationsScreen(false);
+    }
+
+    public void ShowStartScreen(bool show)
+    {
+        if (startScreenGO != null)
+            startScreenGO.SetActive(show);
+    }
+
+    public void ShowGameScreen(bool show)
+    {
+        if (gameScreenGO != null)
+            gameScreenGO.SetActive(show);
+
+    }
+
+    public void ShowCongratulationsScreen(bool show)
+    {
+        if (congratulationsScreenGO != null)
+            congratulationsScreenGO.SetActive(show);
+    }
+
+    public void ShowNextQuestionButton(bool show)
+    {
+        if (nextQnButtonGO != null && nextQnButtonGO.activeInHierarchy)
+        {
+            nextQnButtonGO.SetActive(false);  //if next button is not showing, don't bother to hide it.
+        }
     }
 
     private void SetupQuestion()
@@ -48,10 +91,7 @@ public class MathUI : MonoBehaviour
 
         timerGO.GetComponent<SliderTimer>().StartTimer(PopulateWithCorrectAnswer);
 
-        if (nextQnButtonGO.activeInHierarchy)
-        {
-            nextQnButtonGO.SetActive(false);  //if next button is not showing, don't bother to hide it.
-        }
+        ShowNextQuestionButton(false);
 
         gen.CreateMathQuestion();
 
@@ -71,13 +111,21 @@ public class MathUI : MonoBehaviour
 
     }
 
-
     private void UpdateScoreText()
     {
-        string scoreText = "Score: " + scoreGO.GetComponent<ScoreKeeper>().GetScore().ToString() + " / " + gen.GetTotalNumQuestionsString();
+        string scoreText = "Getting closer to target: " + scoreGO.GetComponent<ScoreKeeper>().GetScore().ToString() + " / " + gen.GetTotalNumQuestionsString();
         scoreGO.GetComponent<Text>().text = scoreText;
     }
 
+    public void ButtonPressedSetNumQuestions(int i)
+    {
+        gen.SetTotalNumQuestions(i);
+    }
+
+    public void ButtonPressedSetOperator(int i)
+    {
+        gen.SetMathOperator(i);
+    }
 
     public void ButtonPressedWithIndex(int i)
     {
@@ -104,7 +152,7 @@ public class MathUI : MonoBehaviour
             }
             nextQnButtonGO.SetActive(true);
 
-            Debug.Log("Button " + i + " was pressed! With selectedAns " + selectedAns);
+            //Debug.Log("Button " + i + " was pressed! With selectedAns " + selectedAns);
         }
     }
 
@@ -124,12 +172,9 @@ public class MathUI : MonoBehaviour
 
     public void NextQnButtonPressed()
     {
-        Debug.Log("Next Button Pressed in math ui");
-
         //New weird idea... Keep going until you reach the goal you/the teacher set for yourself today.
         if (scoreGO.GetComponent<ScoreKeeper>().GetScore() >= gen.GetTotalNumQuestions())
         {
-            Debug.Log("Show CONGRATULATIONS screen");
             ShowCongratulationsScreen(true);
         }
         else
@@ -139,46 +184,13 @@ public class MathUI : MonoBehaviour
         
     }
 
-    public void ShowCongratulationsScreen(bool show)
-    {
-        if (congratulationsScreenGO != null)
-            congratulationsScreenGO.SetActive(show);
-    }
-   
     public void PopulateAnswerButtons()
     {
-        int correctAns = gen.GetCurrCorrectAnswer();
+        int[] possibleAnswers = gen.GetAnswerOptions();  //Todo: Might want to move it to passing in parameters later.
 
-        int randomNumber1 = Random.Range(1, 6);
-        int randomNumber2 = Random.Range(6, 11);
-
-        int wrongAns1 = correctAns + randomNumber1;
-        int wrongAns2 = correctAns + randomNumber2;
-
-        int positionOfCorrectAnswer = Random.Range(1, 4);  //So that position of correct answer is not predictable.
-
-        int[] options;
-
-        switch(positionOfCorrectAnswer)
+        for (int i = 0; i < possibleAnswers.Length; i++)
         {
-            case 1:
-                options = new int[] { correctAns, wrongAns1, wrongAns2 };
-                break;
-            case 2:
-                options = new int[] { wrongAns1, correctAns, wrongAns2 };
-                break;
-            case 3:
-                options = new int[] { wrongAns1, wrongAns2, correctAns };
-                break;
-            default:
-                Debug.Log("Position of correct answer is out of range!");  //todo: Error instead of just log.
-                options = new int[] { wrongAns1, wrongAns2, correctAns };
-                break;
-        }
-
-        for (int i = 0; i < options.Length; i++)
-        {
-            mcqAnswers[i].text = options[i].ToString();
+            mcqAnswers[i].text = possibleAnswers[i].ToString();
         }
 
         EnableAllAnswerButtons(true);  //ct: Enable buttons after new values are populated.
@@ -188,8 +200,10 @@ public class MathUI : MonoBehaviour
     {
         int correctAns = gen.GetCurrCorrectAnswer();
         questionText.text = gen.GetQuestionString() + correctAns;
+        EnableAllAnswerButtons(false);  //ct: Disable buttons after correct answer is shown.
         nextQnButtonGO.GetComponent<NextQuestionButton>().SetSadFace();
         nextQnButtonGO.SetActive(true);
+
     }
     
 }

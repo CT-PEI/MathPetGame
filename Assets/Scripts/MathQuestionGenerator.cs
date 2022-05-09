@@ -18,7 +18,7 @@ public class MathQuestionGenerator
     //ct: Purpose of separating the values is to give more control to the teacher.
     private int lhsMaxValue = 20;  
     private int rhsMaxValue = 20;
-    private Operators mathOperator = Operators.ADD;  //ct: Expose this later to teacher's setting files.
+    private Operators mathOperator = Operators.ADD;
 
     private string questionString;  //ct: This is what prints out on screen as the question.
     private int answer;
@@ -31,6 +31,30 @@ public class MathQuestionGenerator
         public int answer;        
     }
     
+
+    public void SetTotalNumQuestions(int i)
+    {
+        totalNumQns = i;
+    }
+
+    public void SetMathOperator(int operatorEnumIndex)
+    {
+        switch (operatorEnumIndex)
+        {
+            case 0:
+                mathOperator = Operators.ADD;
+                break;
+            case 1:
+                mathOperator = Operators.SUB;
+                break;
+            case 2:
+                mathOperator = Operators.DIV;
+                break;
+            case 3:
+                mathOperator = Operators.MUL;
+                break;
+        }
+    }
 
     public bool IsAnswerCorrect(string selectedAnswer)
     {
@@ -60,7 +84,7 @@ public class MathQuestionGenerator
 
     public string GetQuestionNumberString()
     {
-        string qnNumStr = "Question " + currQnNum + " of " + totalNumQns + ":";
+        string qnNumStr = "Question " + currQnNum + ":";
         return qnNumStr;
     }
 
@@ -72,12 +96,6 @@ public class MathQuestionGenerator
     public int GetTotalNumQuestions()
     {
         return totalNumQns;
-    }
-
-
-    public int GetCurrCorrectAnswer()
-    {
-        return answer;
     }
 
 
@@ -109,11 +127,11 @@ public class MathQuestionGenerator
                 answer = lhs - rhs;
                 break;
             case Operators.DIV:
-                questionOperator = "/";
+                questionOperator = "÷";
                 answer = lhs / rhs;
                 break;
             case Operators.MUL:
-                questionOperator = "*";
+                questionOperator = "x";
                 answer = lhs * rhs;
                 break;
             default:
@@ -124,6 +142,54 @@ public class MathQuestionGenerator
         questionString = lhsStr + " " + questionOperator + " " +  rhsStr + " = ";
         
         return question.answer;
+    }
+
+
+    public int GetCurrCorrectAnswer()
+    {
+        return answer;
+    }
+
+
+    public int[] GetAnswerOptions()
+    {
+        int correctAns = answer;
+
+        //Avoid 0 - so that you don't get the same answer as the correct answer.
+        //Have staggered range so that the 2 wrong answers will not be the same.
+        int randomNumber1 = Random.Range(1, 6);
+        int randomNumber2 = Random.Range(6, 11);
+
+        //So that it is not predicatble that the correct answer is always the min / middle value.
+        int wrongAns1;
+        int signRandNum = Random.Range(1, 3);
+        switch (signRandNum)
+        {
+            case 1:
+                wrongAns1 = correctAns + randomNumber1;
+                break;
+            case 2:
+            default:
+                wrongAns1 = correctAns - randomNumber1;
+                break;
+        }
+
+        int wrongAns2 = correctAns + randomNumber2;
+
+        //Randomize position of correct answer.
+        int positionOfCorrectAnswer = Random.Range(1, 4); 
+        switch (positionOfCorrectAnswer)
+        {
+            case 1:
+                return new int[] { correctAns, wrongAns1, wrongAns2 };
+            case 2:
+                return new int[] { wrongAns1, correctAns, wrongAns2 };
+            case 3:
+            default:
+                return new int[] { wrongAns1, wrongAns2, correctAns };
+        }
+
+
     }
 
 };

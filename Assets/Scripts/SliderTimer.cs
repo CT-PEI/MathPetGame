@@ -11,19 +11,14 @@ public class SliderTimer : MonoBehaviour
 
     private System.Action onCompleteCallbackFn;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        _slider = GetComponent<Slider>();
-    }
-
     public void SetTimerValue(float fillTimeInSecs)
     {
+        _slider = GetComponent<Slider>();
+
         //ct: Just setting the min and max value of the bar. Not setting the fill.
         _slider.minValue = Time.time;
         _slider.maxValue = Time.time + fillTimeInSecs;
     }
-
 
     public void StopTimer()
     {
