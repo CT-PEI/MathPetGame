@@ -8,7 +8,7 @@ public class MathQuestionGenerator
     private int currQnNum = 0;  //ct: Which question is the player currently on?
 
     //ct: TODO: Maybe expose this to 1. component value, 2. text file setting, 3. mutiplayer, and teacher can control live while student is using app.
-    private int totalNumQns = 10;  //ct: Total number of questions for this set of exercise. Can be set outside of code by teacher later.
+    private int totalNumQns = 5;  //ct: Total number of questions for this set of exercise. Can be set outside of code by teacher later.
 
     //ct: This is for question equation values.
     private int lhs = 0;

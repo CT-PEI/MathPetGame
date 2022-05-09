@@ -2155,8 +2155,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -86.993225, y: 211.25}
-  m_SizeDelta: {x: 580.5135, y: 30}
+  m_AnchoredPosition: {x: -86.993225, y: 162.21619}
+  m_SizeDelta: {x: 580.5135, y: 128.0677}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1080269291
 MonoBehaviour:
@@ -2191,7 +2191,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: CONGRATULATIONS!!
+  m_Text: "CONGRATULATIONS!! \n\nYou've reached your goal! =D "
 --- !u!222 &1080269292
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3343,7 +3343,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1567216788
 RectTransform:
   m_ObjectHideFlags: 0
