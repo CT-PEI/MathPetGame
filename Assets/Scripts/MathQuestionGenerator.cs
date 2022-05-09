@@ -59,7 +59,7 @@ public class MathQuestionGenerator
     public bool IsAnswerCorrect(string selectedAnswer)
     {
         int result;
-        bool successful = int.TryParse(selectedAnswer, out result);  //ct: int.TryParse gives result in out result.
+        bool successful = int.TryParse(selectedAnswer, out result);
         if (successful)
         {
             if (result == answer)
@@ -70,8 +70,7 @@ public class MathQuestionGenerator
         }
         else
         {
-            //ct: TODO: Handle this gracefully in game.
-            Debug.Log("int.TryParse failed");
+            Debug.LogError("Could not parse selectedAnswer!");
         }
 
         return false;

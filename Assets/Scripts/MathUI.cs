@@ -85,13 +85,9 @@ public class MathUI : MonoBehaviour
 
     public void ShowNextQuestionButton(bool show)
     {
-        Debug.Log("ShowNextQuestionButton - show 1= " + show);
-        Debug.Log("ShowNextQuestionButton - show 2= " + nextQnButtonGO != null);
-        Debug.Log("ShowNextQuestionButton - show 3= " + nextQnButtonGO.activeInHierarchy);
-        if (nextQnButtonGO != null)// && nextQnButtonGO.activeInHierarchy)
+        if (nextQnButtonGO != null)
         {
-            Debug.Log("ShowNextQuestionButton - show 222= " + show);
-            nextQnButtonGO.SetActive(false);  //if next button is not showing, don't bother to hide it.
+            nextQnButtonGO.SetActive(false);
         }
     }
 
@@ -127,9 +123,16 @@ public class MathUI : MonoBehaviour
         scoreGO.GetComponent<Text>().text = scoreText;
     }
 
-    public void ButtonPressedSetNumQuestions(int i)
+    public void ButtonPressedSetNumQuestions(GameObject textGO)
     {
-        gen.SetTotalNumQuestions(i);
+        int numOfQns;
+        string numberInText = textGO.GetComponent<Text>().text;
+        bool success = int.TryParse(numberInText, out numOfQns);
+        if(!success)
+        {
+            Debug.LogError("Could not parse numberInText!");
+        }
+        gen.SetTotalNumQuestions(numOfQns);
     }
 
     public void ButtonPressedSetOperator(int i)
@@ -161,8 +164,6 @@ public class MathUI : MonoBehaviour
                 nextQnButtonGO.GetComponent<NextQuestionButton>().SetSadFace();
             }
             nextQnButtonGO.SetActive(true);
-
-            //Debug.Log("Button " + i + " was pressed! With selectedAns " + selectedAns);
         }
     }
 
