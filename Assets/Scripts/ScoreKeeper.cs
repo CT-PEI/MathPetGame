@@ -16,4 +16,9 @@ public class ScoreKeeper : MonoBehaviour
     {
         return score;
     }
+
+    public void ResetScore()
+    {
+        score = 0;
+    }
 }

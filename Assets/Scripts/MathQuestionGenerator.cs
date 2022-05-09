@@ -98,6 +98,10 @@ public class MathQuestionGenerator
         return totalNumQns;
     }
 
+    public void ResetCurrQnNum()
+    {
+        currQnNum = 0;
+    }
 
     public int CreateMathQuestion()
     {

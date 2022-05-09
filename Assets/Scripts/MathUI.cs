@@ -44,12 +44,18 @@ public class MathUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        RestartGameState();
+    }
+
+    public void RestartGameState()
+    {
         ShowStartScreen(true);
         ShowGameScreen(false);
         ShowCongratulationsScreen(false);
+        gen.ResetCurrQnNum();
     }
 
-    public void StartGame()
+    public void StartMathGame()
     {
         //When user clicked on number of question button and operator button, the buttons already took care of setting the values in MathQuestionGenerator.
         SetupQuestion();
@@ -79,8 +85,12 @@ public class MathUI : MonoBehaviour
 
     public void ShowNextQuestionButton(bool show)
     {
-        if (nextQnButtonGO != null && nextQnButtonGO.activeInHierarchy)
+        Debug.Log("ShowNextQuestionButton - show 1= " + show);
+        Debug.Log("ShowNextQuestionButton - show 2= " + nextQnButtonGO != null);
+        Debug.Log("ShowNextQuestionButton - show 3= " + nextQnButtonGO.activeInHierarchy);
+        if (nextQnButtonGO != null)// && nextQnButtonGO.activeInHierarchy)
         {
+            Debug.Log("ShowNextQuestionButton - show 222= " + show);
             nextQnButtonGO.SetActive(false);  //if next button is not showing, don't bother to hide it.
         }
     }
@@ -176,6 +186,10 @@ public class MathUI : MonoBehaviour
         if (scoreGO.GetComponent<ScoreKeeper>().GetScore() >= gen.GetTotalNumQuestions())
         {
             ShowCongratulationsScreen(true);
+
+            //Prep for next round.
+            scoreGO.GetComponent<ScoreKeeper>().ResetScore();
+            EnableAllAnswerButtons(true);  
         }
         else
         {
